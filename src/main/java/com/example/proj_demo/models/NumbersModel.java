@@ -18,6 +18,7 @@ public class NumbersModel {
     private List<Integer> numbers;
     private String phoneNumber;
     private LocalDateTime purchaseTime;
+    private byte[] pdfContent;
 
     public NumbersModel() {
     }
@@ -41,6 +42,14 @@ public class NumbersModel {
     }
     public LocalDateTime getPurchaseTime() {
         return purchaseTime;
+    }
+
+    public byte[] getPdfContent() {
+        return pdfContent;
+    }
+
+    public void setPdfContent(byte[] pdfContent) {
+        this.pdfContent = pdfContent;
     }
 
     @Override
