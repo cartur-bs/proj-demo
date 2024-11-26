@@ -110,6 +110,9 @@ public class NumbersController {
                     .body(pdfContent); // O conteúdo binário do PDF gerado
 
         } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("-------");
+            System.out.println(e.getCause());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }

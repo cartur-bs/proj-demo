@@ -1,7 +1,9 @@
 package com.example.proj_demo.services;
 
 import com.example.proj_demo.models.ChosenNmbModel;
+import com.example.proj_demo.models.NumbersModel;
 import com.example.proj_demo.repository.ChosenNmbRepository;
+import com.example.proj_demo.repository.NumbersRepository;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -17,35 +19,81 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ChosenNmbService {
 
     @Autowired
     private ChosenNmbRepository chosenNmbRepository;
+    @Autowired
+    NumbersRepository numbersRepository;
 
-    public LocalDateTime getTime(){
+    public LocalDateTime getTime() {
         return LocalDateTime.now();
     }
 
-    public boolean validateListLength(List<Integer> numbers){
+    public boolean validateListLength(List<Integer> numbers) {
         return numbers.size() == 10;
     }
 
     public Map<UUID, Integer> compararNúmeros(List<Integer> chosenNumbers) {
-        List<ChosenNmbModel> chosenNmbList = chosenNmbRepository.findAll();
+        // Buscar todos os registros de NumbersModel no banco
+        List<NumbersModel> numbersModelList = numbersRepository.findAll();
         Map<UUID, Integer> resultados = new HashMap<>();
 
-        for (ChosenNmbModel chosenNmb : chosenNmbList) {
-            List<Integer> numerosEscolhidos = chosenNmb.getChosenNumbers();
-            long iguais = numerosEscolhidos.stream()
-                    .filter(chosenNumbers::contains)
+        // Iterar sobre cada NumbersModel
+        for (NumbersModel numbersModel : numbersModelList) {
+            // Obter a lista de números associados ao NumbersModel
+            List<Integer> numerosBanco = numbersModel.getNumbers(); // Supondo que 'getNumbers()' retorne a lista de números do NumbersModel
+            // Contar quantos números da lista recebida estão presentes nos números do NumbersModel
+            long iguais = numerosBanco.stream()
+                    .filter(chosenNumbers::contains) // Verifica se o número de banco está na lista recebida
                     .count();
 
-            if (iguais > 0) {
-                resultados.put(chosenNmb.getId(), (int) iguais);
+            // Se houver alguma correspondência, armazenar o resultado
+            resultados.put(numbersModel.getId(), (int) iguais); // Armazenar o ID do NumbersModel e a quantidade de números iguais
+
+        }
+
+        // Retornar o mapa com os resultados (ID e quantidade de números iguais)
+        return resultados;
+    }
+
+    public Map<UUID, Integer> compararNúmerosNew(List<Integer> chosenNumbers) {
+        // Buscar todos os registros de NumbersModel
+        List<NumbersModel> numbersModelList = numbersRepository.findAll();
+        Map<UUID, Integer> resultados = new HashMap<>();
+
+        for (NumbersModel numbersModel : numbersModelList) {
+            // Obter o número de telefone associado a cada NumbersModel
+            String phoneNumber = numbersModel.getPhoneNumber();
+
+            // Verificar se o número de telefone não é nulo
+            if (phoneNumber != null) {
+                // Converter o número de telefone em uma lista de inteiros (se necessário)
+                // Caso você precise extrair os números, faça isso de maneira consistente
+                List<Integer> numerosTelefone = phoneNumber.chars()
+                        .filter(Character::isDigit) // Filtrando apenas os dígitos
+                        .map(Character::getNumericValue)
+                        .boxed()
+                        .collect(Collectors.toList());
+
+                // Comparar os números do telefone com os números escolhidos
+                long iguais = numerosTelefone.stream()
+                        .filter(chosenNumbers::contains)
+                        .count();
+
+                // Se houver alguma correspondência, registrar no resultado
+                if (iguais > 0) {
+                    resultados.put(numbersModel.getId(), (int) iguais);
+                }
+            } else {
+                // Log para quando o phoneNumber for nulo
+                System.out.println("Número de telefone nulo para o ID: " + numbersModel.getId());
             }
         }
+
         return resultados;
     }
 }

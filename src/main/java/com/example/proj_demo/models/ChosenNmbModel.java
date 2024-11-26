@@ -10,6 +10,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "chosen_numbers")
 public class ChosenNmbModel {
+    //Essa classe define os números sorteados
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -41,5 +42,10 @@ public class ChosenNmbModel {
                 "chosenNumbers=" + chosenNumbers +
                 ", choosingTime=" + choosingTime +
                 '}';
+    }
+
+    public UUID getNumbersModelId() {
+        NumbersModel numbersModel = new NumbersModel();
+        return numbersModel.getId();
     }
 }
