@@ -10,7 +10,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "chosen_numbers")
 public class ChosenNmbModel {
-    //Essa classe define os números sorteados
+    //Essa classe lida com os números sorteados
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -44,6 +44,7 @@ public class ChosenNmbModel {
                 '}';
     }
 
+    //usado para pegar o ID da venda - pode apagar
     public UUID getNumbersModelId() {
         NumbersModel numbersModel = new NumbersModel();
         return numbersModel.getId();

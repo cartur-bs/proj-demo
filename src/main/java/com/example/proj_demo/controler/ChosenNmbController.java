@@ -10,7 +10,6 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,6 +33,7 @@ public class ChosenNmbController {
     @Autowired
     NumbersRepository numbersRepository;
 
+    //persiste um novo resultado
     @PostMapping("/post")
     public ResponseEntity<?> postChosen(@RequestBody ChosenNmbDTO chosenNmbDTO, ChosenNmbService chosenNmbService) throws Exception {
         try {
@@ -50,11 +49,13 @@ public class ChosenNmbController {
 
     }
 
+    //compara o resultado com os números vendidos
     @PostMapping("/compare")
     public Map<UUID, Integer> compararNúmeros(@RequestBody ChosenNmbDTO chosenNmbDTO) {
         return chosenNmbService.compararNúmeros(chosenNmbDTO.chosenNumbers());
     }
 
+    //baixa o pdf com as compras com numeros iguais - deve ser rodada no navegador
     @GetMapping("/download/{numbers}")
     public ResponseEntity<byte[]> downloadPdf(@PathVariable String numbers) {
         try {
@@ -122,7 +123,4 @@ public class ChosenNmbController {
                     .body(("Erro ao gerar o PDF: " + e.getMessage()).getBytes());
         }
     }
-
-
-
 }

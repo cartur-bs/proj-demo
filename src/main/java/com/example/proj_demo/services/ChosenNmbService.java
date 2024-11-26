@@ -1,31 +1,19 @@
 package com.example.proj_demo.services;
 
-import com.example.proj_demo.models.ChosenNmbModel;
 import com.example.proj_demo.models.NumbersModel;
-import com.example.proj_demo.repository.ChosenNmbRepository;
 import com.example.proj_demo.repository.NumbersRepository;
-import org.antlr.v4.runtime.misc.NotNull;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class ChosenNmbService {
 
-    @Autowired
-    private ChosenNmbRepository chosenNmbRepository;
     @Autowired
     NumbersRepository numbersRepository;
 
@@ -57,43 +45,6 @@ public class ChosenNmbService {
         }
 
         // Retornar o mapa com os resultados (ID e quantidade de números iguais)
-        return resultados;
-    }
-
-    public Map<UUID, Integer> compararNúmerosNew(List<Integer> chosenNumbers) {
-        // Buscar todos os registros de NumbersModel
-        List<NumbersModel> numbersModelList = numbersRepository.findAll();
-        Map<UUID, Integer> resultados = new HashMap<>();
-
-        for (NumbersModel numbersModel : numbersModelList) {
-            // Obter o número de telefone associado a cada NumbersModel
-            String phoneNumber = numbersModel.getPhoneNumber();
-
-            // Verificar se o número de telefone não é nulo
-            if (phoneNumber != null) {
-                // Converter o número de telefone em uma lista de inteiros (se necessário)
-                // Caso você precise extrair os números, faça isso de maneira consistente
-                List<Integer> numerosTelefone = phoneNumber.chars()
-                        .filter(Character::isDigit) // Filtrando apenas os dígitos
-                        .map(Character::getNumericValue)
-                        .boxed()
-                        .collect(Collectors.toList());
-
-                // Comparar os números do telefone com os números escolhidos
-                long iguais = numerosTelefone.stream()
-                        .filter(chosenNumbers::contains)
-                        .count();
-
-                // Se houver alguma correspondência, registrar no resultado
-                if (iguais > 0) {
-                    resultados.put(numbersModel.getId(), (int) iguais);
-                }
-            } else {
-                // Log para quando o phoneNumber for nulo
-                System.out.println("Número de telefone nulo para o ID: " + numbersModel.getId());
-            }
-        }
-
         return resultados;
     }
 }
