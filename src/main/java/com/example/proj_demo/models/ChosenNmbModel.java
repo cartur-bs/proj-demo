@@ -43,10 +43,4 @@ public class ChosenNmbModel {
                 ", choosingTime=" + choosingTime +
                 '}';
     }
-
-    //usado para pegar o ID da venda - pode apagar
-    public UUID getNumbersModelId() {
-        NumbersModel numbersModel = new NumbersModel();
-        return numbersModel.getId();
-    }
 }

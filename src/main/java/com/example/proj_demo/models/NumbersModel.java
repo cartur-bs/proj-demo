@@ -2,7 +2,6 @@ package com.example.proj_demo.models;
 
 import com.example.proj_demo.DTOs.NumbersDTO;
 import jakarta.persistence.*;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -18,7 +18,7 @@ import java.util.Set;
 @Service
 public class NumbersService {
     public boolean validateListLength(List<Integer> numbers){
-        if(numbers.size() != 10){
+        if(numbers.size() != 10){ //simplificado seria return numbers.size() == 10
             return false;
         }else return true;
     }
