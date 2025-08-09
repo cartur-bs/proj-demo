@@ -23,4 +23,12 @@ message c'est le meme que le dernier
 avec un @Get {chosen/download/<listNumeros>}
 
 
+Como usar
+- Para salvar os números que foram vendidos: acesse {numbers/post}
+- Para obter o bilhete que acabou de ser vendido: @Get {numbers/download/<ID>}. O ID é retornado quando o objeto é salvo e usamos ele para acessar o link.
+- Para manipular os números escolhidos como resultado: enviar via @Post {chosen/post} com o conteúdo
+{"chosenNumbers": [x, x, x, x, x, x, x, x, x, x, x]}
+- Para comparar os números do resultado com os números que foram vendidos: @Post {chosen/compare} O corpo da mensagem é o mesmo do anterior.
+-Para obter todos os números vendidos em PDF: @Get {chosen/download/<listNumeros>}
+
 
